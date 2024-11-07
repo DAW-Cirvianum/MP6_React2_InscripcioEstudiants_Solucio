@@ -8,7 +8,8 @@ const App = () => {
   const [tipusEstudiant, setTipusEstudiant] = useState('No Graduat');
   const [ngPlaces, setNGPlaces] = useState(60);
   const [gPlaces, setGPlaces] = useState(40);
-  const [detallsEstudiant, setDetallsEstudiant] = useState([]);
+  const [detallsEstudiant, setDetallsEstudiant] = useState([]); // Llista d'estudiants
+  const [edicioEstudiant, setEdicioEstudiant] = useState(null);
 
   const handleChange = (e) => {
     setTipusEstudiant(e.target.value);
@@ -20,11 +21,36 @@ const App = () => {
       : setNGPlaces(updatedPlaces);
   };
 
+  // CREATE
   const handleAddEstudiant = (nouEstudiant) => {
     setDetallsEstudiant((anteriorEstudiants) => [
       ...anteriorEstudiants,
       nouEstudiant,
     ]);
+  };
+
+  // READ
+
+  // UPDATE
+  // codi per seleccionar l'estudiant
+  const handleEditStudent = (student) => {
+    setEdicioEstudiant(student);
+  };
+
+  //codi per actualitzar l'estudiant existent
+  const handleUpdateStudent = (updatedStudent) => {
+    setDetallsEstudiant((anteriorEstudiants) => {
+      anteriorEstudiants.map((student) => {
+        student.key === updatedStudent.key ? updatedStudent : student;
+      });
+    });
+  };
+
+  // DELETE
+  const handleDelete = (id, program) => {
+    const newItems = detallsEstudiant.filter((item) => item.key !== id);
+    setDetallsEstudiant(newItems); // Actualitza l'estat de `App`
+    restaurarPlaces(program);
   };
 
   const restaurarPlaces = (pgm) => {
@@ -78,8 +104,8 @@ const App = () => {
       />
       <StudentList
         detallsEstudiant={detallsEstudiant}
-        setDetallsEstudiant={setDetallsEstudiant}
-        restaurarPlaces={restaurarPlaces}
+        onEditStudent={handleEditStudent}
+        onDeleteStudent={handleDelete}
       />
     </div>
   );
